@@ -17,6 +17,6 @@ Package& Package::operator=(Package&& other){
   return *this;
 }
 
-ElementID Package::getID() const{
+ElementID Package::get_id() const{
   return id;
 }
