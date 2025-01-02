@@ -2,7 +2,8 @@
 #define PACKAGE_HPP
 #include "types.hxx"
 #include "storage_types.hxx"
-
+#include <cstdlib>
+#include <list>
 class Package {
   public:
     //konstruktory
@@ -20,8 +21,13 @@ class Package {
     
 };
 
-class PackageQueue(IPackageQueue){
-    public:
-        PackageQueue(PackageQueueType):{}
+class PackageQueue: public IPackageQueue{
+public:
+    PackageQueue(PackageQueueType type) : type_ (type){}
+
+
+private:
+    std::list<Package> queue_;
+    PackageQueueType type_;
 };
 #endif //PACKAGE_HPP
