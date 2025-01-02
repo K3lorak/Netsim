@@ -10,7 +10,7 @@ class Package {
     Package(ElementID id) : id(id) {};
     Package(Package&& other) noexcept;
     //metody
-    Package& operator=(Package&& other) noexcept;
+    Package&a operator=(Package&& other) noexcept;
     ElementID get_id() const;
     //destruktor
     ~Package() {};
@@ -18,10 +18,5 @@ class Package {
   private:
       ElementID id;
     
-};
-
-class PackageQueue(IPackageQueue){
-    public:
-        PackageQueue(PackageQueueType):{}
 };
 #endif //PACKAGE_HPP

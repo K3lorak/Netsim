@@ -22,3 +22,8 @@ class IPackageQueue{
 
         PackageQueueType get_queue_type() {query}
 };
+
+class PackageQueue(IPackageQueue){
+    public:
+        PackageQueue(PackageQueueType):{}
+};
