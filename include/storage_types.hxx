@@ -25,7 +25,8 @@ class IPackageQueue: public IPackageStockpile{
 class PackageQueue: public IPackageQueue{
 public:
     PackageQueue(PackageQueueType type) : type_ (type){}
-    PackageQueueType get_queue_type() const override(){return type_;}
+    PackageQueueType get_queue_type() const override{return type_;}
+
 private:
     std::list<Package> queue_;
     PackageQueueType type_;
