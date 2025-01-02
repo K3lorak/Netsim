@@ -1,7 +1,5 @@
-
+#ifndef PACKAGE_HPP
 #define PACKAGE_HPP
-
-
 #include "types.hxx"
 #include "storage_types.hxx"
 
@@ -22,3 +20,8 @@ class Package {
     
 };
 
+class PackageQueue(IPackageQueue){
+    public:
+        PackageQueue(PackageQueueType):{}
+};
+#endif //PACKAGE_HPP
