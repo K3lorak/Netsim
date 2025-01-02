@@ -3,13 +3,11 @@
 #include <vector>
 #include <iostream>
 
-Package::Package(){}
-Package::Package(ElementID id) : id(id){}
-Package::Package(Package&& other) : id(std::move(other.id)){
+Package::Package(Package&& other) noexcept : id(std::move(other.id)){
   other.id = 0;
 }
 
-Package& Package::operator=(Package&& other){
+Package& Package::operator=(Package&& other) noexcept {
   if (this != &other){
     id = std::move(other.id);
     other.id = 0;
