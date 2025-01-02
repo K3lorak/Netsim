@@ -9,7 +9,7 @@ Package::Package(Package&& other) : id(std::move(other.id)){
   other.id = 0;
 }
 
-Package& Package::operator=(Package& other){
+Package& Package::operator=(Package&& other){
   if (this != &other){
     id = std::move(other.id);
     other.id = 0;
