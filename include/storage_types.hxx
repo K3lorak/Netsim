@@ -24,13 +24,5 @@ public:
     virtual PackageQueueType get_queue_type() const;
 };
 
-class PackageQueue: public IPackageQueue{
-    public:
-        PackageQueue(PackageQueueType type) : type_ (type){}
 
-
-    private:
-        std::list<Package> queue_;
-        PackageQueueType type_;
-};
 #endif //STORAGE_TYPES_HPP
