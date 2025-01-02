@@ -20,14 +20,4 @@ class Package {
       ElementID id;
     
 };
-
-class PackageQueue: public IPackageQueue{
-public:
-    PackageQueue(PackageQueueType type) : type_ (type){}
-
-
-private:
-    std::list<Package> queue_;
-    PackageQueueType type_;
-};
 #endif //PACKAGE_HPP

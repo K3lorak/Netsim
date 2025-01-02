@@ -1,3 +1,8 @@
+#ifndef STORAGE_TYPES_HPP
+#define STORAGE_TYPES_HPP
+#include "package.hxx"
+#include <cstdlib>
+
 enum class PackageQueueType {
     FIFO,
     LIFO
@@ -5,20 +10,24 @@ enum class PackageQueueType {
 
 class IPackageStockpile {
     public:
-        void push(Package&&){}
-
-        bool empty() {query}
-
-        std::size_t size() {query}
-
-        //iteratory - do zrobienia
-
-        ~IPackageStockpile()
+        virtual void push(Package&&);
+        virtual bool empty() const {}
+        virtual std::size_t size() const {}
+        virtual ~IPackageStockpile() {}
 };
 
-class IPackageQueue{
+class IPackageQueue: public IPackageStockpile{
     public:
-        Package pop() {}
-
-        PackageQueueType get_queue_type() {query}
+        virtual Package pop();
+        virtual PackageQueueType get_queue_type() const {}
 };
+class PackageQueue: public IPackageQueue{
+public:
+    PackageQueue(PackageQueueType type) : type_ (type){}
+
+private:
+    std::list<Package> queue_;
+    PackageQueueType type_;
+};
+
+#endif //STORAGE_TYPES_HPP
