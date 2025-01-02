@@ -19,4 +19,9 @@ class IPackageQueue{
   public:
     Package pop();
     PackageQueueType get_queue_type() const {query};
+
+class PackageQueue(IPackageQueue){
+    public:
+        PackageQueue(PackageQueueType):{}
+};
 #endif //STORAGE_TYPES_HPP
