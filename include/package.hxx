@@ -1,5 +1,7 @@
-#ifndef PACKAGE_HPP
+
 #define PACKAGE_HPP
+
+
 #include "types.hxx"
 #include "storage_types.hxx"
 
@@ -10,7 +12,7 @@ class Package {
     Package(ElementID id) : id(id) {};
     Package(Package&& other) noexcept;
     //metody
-    Package&a operator=(Package&& other) noexcept;
+    Package& operator=(Package&& other) noexcept;
     ElementID get_id() const;
     //destruktor
     ~Package() {};
@@ -19,4 +21,4 @@ class Package {
       ElementID id;
     
 };
-#endif //PACKAGE_HPP
+
