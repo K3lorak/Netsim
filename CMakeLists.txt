@@ -23,8 +23,7 @@ set(SOURCE_FILES_TESTS
 )
 
 # === Cel dla aplikacji ===
-add_executable(tsp ${SOURCE_FILES} main.cpp
-        src/nodes.cpp)
+add_executable(tsp ${SOURCE_FILES} main.cpp)
 
 # === Konfiguracja dla testów ===
 if(EXISTS ${PROJECT_SOURCE_DIR}/test)
