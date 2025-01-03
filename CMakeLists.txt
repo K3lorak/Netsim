@@ -13,11 +13,13 @@ include_directories(
 set(SOURCE_FILES
         src/package.cpp
         src/storage_types.cpp
+        src/helpers.cpp
 )
 
 # Pliki testowe (tylko do celu testowego)
 set(SOURCE_FILES_TESTS
         test/tests.cpp
+        include/vertex_types.hxx
 )
 
 # === Cel dla aplikacji ===
