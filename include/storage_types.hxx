@@ -21,6 +21,8 @@ public:
     virtual Iterator begin() = 0;
     virtual Iterator end() = 0;
 
+    virtual ConstIterator begin() const = 0;
+    virtual ConstIterator end() const = 0;
     virtual ConstIterator cbegin() const = 0;
     virtual ConstIterator cend() const = 0;
 
@@ -32,19 +34,29 @@ class IPackageQueue: public IPackageStockpile{
     public:
         virtual Package pop();
         virtual PackageQueueType get_queue_type() const {}
+
+        //destruktor
+        ~IPackageQueue() override = default;
 };
 
 class PackageQueue: public IPackageQueue{
 public:
-    PackageQueue(PackageQueueType type) : type_ (type){}
+    PackageQueue(PackageQueueType type) : type_ (type), queue_(){}
     PackageQueueType get_queue_type() const override {return type_;}
     Package pop() override ;
+
+    void push(Package&&) override;
+    bool empty() const override;
+    std::size_t size() const override;
 
     Iterator begin() override {return queue_.begin();}
     Iterator end() override {return queue_.end();}
 
     ConstIterator cbegin() const override {return queue_.cbegin();}
     ConstIterator cend() const override {return queue_.cend();}
+
+    //destruktor
+    ~PackageQueue() override = default;
 private:
     std::list<Package> queue_;
     PackageQueueType type_;
