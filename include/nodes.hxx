@@ -4,8 +4,15 @@
 
 #ifndef NODES_HXX
 #define NODES_HXX
+
+#include "types.hxx"
+#include "package.hxx"
 #include "storage_types.hxx"
+#include <cstdlib>
+#include <optional>
 #include <memory>
+#include <map>
+
 
 class IPackageReceiver
 {
@@ -17,43 +24,12 @@ class IPackageReceiver
 class Storehouse:public IPackageReceiver
 {
     public:
-        Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d):id_(id), d_(d) {}
+        Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)):id_(id), d_(std::move(d)) {}
         void receive_package(Package&&) override{}
         ElementID get_id() const override {return  id_;}
     private:
         ElementID id_;
         std::unique_ptr<IPackageStockpile> d_;
-};
-
-class Worker:public PackageSender, public IPackageReceiver
-{
-    public:
-        Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q):
-          id_(id), pd_(pd), q_(q){}
-        void do_work(Time t){}
-        TimeOffset get_processing_duration() const {}
-        Time get_package_processing_start_time() const {}
-    private:
-        ElementID id_;
-        TimeOffset pd_;
-        std::unique_ptr<IPackageQueue> q_;
-
-}
-
-
-
-#include <cstdlib>
-#include <optional>
-#include "types.hxx"
-#include "package.hxx"
-#include "storage_types.hxx"
-
-class Ramp{
-    public:
-        Ramp(ElementID id,TimeOffset di);
-        void deliver_goods(Time t);
-        TimeOffset get_delivery_interval() const;
-        ElementID det_id(void) const;
 };
 
 class ReceiverPreferences{
@@ -63,7 +39,6 @@ class ReceiverPreferences{
 
         ReceiverPreferences(ProbabilityGenerator pg);
         void add_receiver(IPackageReceiver* r);
-        void add_receiver(IPackageReceiver* r);
         void remove_receiver(IPackageReceiver* r);
         IPackageReceiver* choose_receiver(void);
         preferences_t& get_preferences(void) const;
@@ -71,12 +46,34 @@ class ReceiverPreferences{
 
 class PackageSender: public IPackageReceiver{
     public:
-        PackageSender(PackageSender&&);
+        PackageSender() = default;
+        PackageSender(PackageSender&&) = default;
         ReceiverPreferences receiver_preferences_();
         void send_package(void);
         std::optional<Package>& get_sending_buffer(void) const;
     protected:
         void push_package(Package&&);
+};
+
+class Ramp: public PackageSender{
+    public:
+        Ramp(ElementID id,TimeOffset di);
+        void deliver_goods(Time t);
+        TimeOffset get_delivery_interval() const;
+        ElementID det_id(void) const;
+};
+
+class Worker:public PackageSender, public IPackageReceiver
+{
+    public:
+        Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q) : id_(id), pd_(pd), q_(std::move(q)){}
+        void do_work(Time t){}
+        TimeOffset get_processing_duration() const {}
+        Time get_package_processing_start_time() const {}
+    private:
+        ElementID id_;
+        TimeOffset pd_;
+        std::unique_ptr<IPackageQueue> q_;
 };
 
 #endif //NODES_HXX
