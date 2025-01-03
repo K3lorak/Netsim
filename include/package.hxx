@@ -7,17 +7,19 @@
 class Package {
   public:
     //konstruktory
-    Package() : id(0) {}
-    Package(ElementID id) : id(id) {};
+    Package() : id_(0) {}
+    Package(ElementID id) : id_(id) {};
     Package(Package&& other) noexcept;
+
     //metody
     Package& operator=(Package&& other) noexcept;
-    ElementID get_id() const;
+    ElementID get_id() const {return id_;};
+
     //destruktor
     ~Package() {};
 
   private:
-      ElementID id;
+      ElementID id_;
     
 };
 #endif //PACKAGE_HPP
