@@ -14,7 +14,7 @@ public:
     using Iterator = std::list<Package>::iterator;
     using ConstIterator = std::list<Package>::const_iterator;
 
-    virtual void push(Package&&) = 0;
+    virtual void push(Package&& moved) = 0;
     virtual bool empty() const = 0;
     virtual size_t size() const = 0;
 
@@ -45,12 +45,18 @@ public:
     PackageQueueType get_queue_type() const override {return type_;}
     Package pop() override ;
 
-    void push(Package&&) override;
-    bool empty() const override;
-    std::size_t size() const override;
+    void push(Package&& moved) override{
+        queue_.emplace_back(std::move(moved));
+    }
+    bool empty() const override{
+        return queue_.end();
+    }
+    std::size_t size() const override{
+         return queue_.size();   
+    }
 
-    Iterator begin() override {return queue_.begin();}
-    Iterator end() override {return queue_.end();}
+    Iterator begin() override {return queue_.cbegin();}
+    Iterator end() override {return queue_.cend();}
 
     ConstIterator cbegin() const override {return queue_.cbegin();}
     ConstIterator cend() const override {return queue_.cend();}
