@@ -16,3 +16,16 @@ Package PackageQueue::pop() {
             break;
     };
 }
+
+void PackageQueue::push(Package&&){
+ };
+
+bool PackageQueue::empty(){
+    if(PackageQueue::queue_.empty())
+        return True;
+    else 
+        return False;
+};
+
+std::size_t PackageQueue::size(){
+};
