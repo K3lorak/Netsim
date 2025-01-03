@@ -3,6 +3,7 @@
 #include "package.hxx"
 #include <cstdlib>
 #include <vector>
+#include <list>
 
 enum class PackageQueueType {
     FIFO,
@@ -31,12 +32,12 @@ public:
 };
 
 class IPackageQueue: public IPackageStockpile{
-    public:
-        virtual Package pop();
-        virtual PackageQueueType get_queue_type() const {}
+public:
+    virtual Package pop();
+    virtual PackageQueueType get_queue_type() const;
 
-        //destruktor
-        ~IPackageQueue() override = default;
+    //destruktor
+    ~IPackageQueue() override = default;
 };
 
 class PackageQueue: public IPackageQueue{
@@ -49,23 +50,25 @@ public:
         queue_.emplace_back(std::move(moved));
     }
     bool empty() const override{
-        return queue_.end();
+        return queue_.empty();
     }
     std::size_t size() const override{
-         return queue_.size();   
+        return queue_.size();
     }
 
-    Iterator begin() override {return queue_.cbegin();}
-    Iterator end() override {return queue_.cend();}
+    Iterator begin() override {return queue_.begin();}
+    Iterator end() override {return queue_.end();}
 
+    ConstIterator begin() const override {return queue_.begin();};
+    ConstIterator end() const override {return queue_.end();};
     ConstIterator cbegin() const override {return queue_.cbegin();}
     ConstIterator cend() const override {return queue_.cend();}
 
     //destruktor
     ~PackageQueue() override = default;
 private:
-    std::list<Package> queue_;
     PackageQueueType type_;
+    std::list<Package> queue_;
 };
 
 #endif //STORAGE_TYPES_HPP

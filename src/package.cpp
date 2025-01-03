@@ -11,9 +11,8 @@ Package::Package(){
     // jak freed jest puste
     // to przydziela id o 1 większe niż ostatnie w assigned
     // else przydziela najmniejsze z freed
-    if freed_IDs.empty()
-    {
-        if assigned_IDs.empty(){
+    if(freed_IDs.empty()){
+        if(assigned_IDs.empty()){
             id_ = 1;
         }
         else{
@@ -28,20 +27,20 @@ Package::Package(){
 };
 
 Package::Package(Package&& other) noexcept : id_(std::move(other.id_)){
-  other.id_ = 0;
+    other.id_ = 0;
 }
 
 Package& Package::operator=(Package&& other) noexcept {
-  if (this != &other){
-    id_ = std::move(other.id_);
-    other.id_ = 0;
-  }
-  return *this;
+    if (this != &other){
+        id_ = std::move(other.id_);
+        other.id_ = 0;
+    }
+    return *this;
 }
 
 Package::~Package() {
-    freed_IDs.insert(ID_);
-    assigned_IDs.erase(ID_);
+    freed_IDs.insert(id_);
+    assigned_IDs.erase(id_);
 }
 
 
