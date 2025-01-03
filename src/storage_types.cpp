@@ -28,4 +28,5 @@ bool PackageQueue::empty(){
 };
 
 std::size_t PackageQueue::size(){
+    return PackageQueue::queue_.length();
 };
