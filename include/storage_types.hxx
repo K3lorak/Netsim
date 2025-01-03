@@ -33,8 +33,8 @@ public:
 
 class IPackageQueue: public IPackageStockpile{
 public:
-    virtual Package pop();
-    virtual PackageQueueType get_queue_type() const;
+    virtual Package pop() = 0;
+    virtual PackageQueueType get_queue_type() const = 0;
 
     //destruktor
     ~IPackageQueue() override = default;
@@ -42,9 +42,11 @@ public:
 
 class PackageQueue: public IPackageQueue{
 public:
+    PackageQueue() = delete;
+
     PackageQueue(PackageQueueType type) : type_ (type), queue_(){}
-    PackageQueueType get_queue_type() const override {return type_;}
     Package pop() override ;
+    PackageQueueType get_queue_type() const override {return type_;}
 
     void push(Package&& moved) override{
         queue_.emplace_back(std::move(moved));
