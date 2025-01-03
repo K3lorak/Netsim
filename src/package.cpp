@@ -27,7 +27,7 @@ Package::Package(){
 };
 
 Package::Package(Package&& other) noexcept : id_(std::move(other.id_)){
-    other.id_ = 0;
+    id_ = other.id_;
 }
 
 Package& Package::operator=(Package&& other) noexcept {
