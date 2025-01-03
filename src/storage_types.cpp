@@ -13,17 +13,3 @@ Package PackageQueue::pop() {
         return p;
     }
 }
-
-void PackageQueue::push(Package&&){
- };
-
-bool PackageQueue::empty() const{
-    if(PackageQueue::queue_.empty())
-        return True;
-    else 
-        return False;
-};
-
-std::size_t PackageQueue::size() const{
-    return PackageQueue::queue_.length();
-};
