@@ -4,11 +4,12 @@
 #include "storage_types.hxx"
 #include <cstdlib>
 #include <list>
+#include <set>
 class Package {
   public:
     //konstruktory
-    Package() : id_(0) {}
-    Package(ElementID id) : id_(id) {};
+    Package();
+    Package(ElementID id) : id_(id) {assigned_IDs.insert(id_);};
     Package(Package&& other) noexcept;
 
     //metody
@@ -19,7 +20,8 @@ class Package {
     ~Package() {};
 
   private:
-      ElementID id_;
-    
+    ElementID id_;
+    std::set<ElementID> assigned_IDs;
+    std::set<ElementID> freed_IDs;
 };
 #endif //PACKAGE_HPP
