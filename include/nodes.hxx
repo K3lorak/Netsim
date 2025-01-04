@@ -48,8 +48,8 @@ class ReceiverPreferences{
         using ConstIterator = preferences_t::const_iterator;
 
         ReceiverPreferences(ProbabilityGenerator pg = probability_generator ):pg_(pg){};
-        void add_receiver(IPackageReceiver* r){};
-        void remove_receiver(IPackageReceiver* r){}
+        void add_receiver(IPackageReceiver* r);
+        void remove_receiver(IPackageReceiver* r);
         IPackageReceiver* choose_receiver(void);
         preferences_t& get_preferences(void) {return preferences_;}
     //usunąlem const z linijki wyzej bo z nim byly bledy
