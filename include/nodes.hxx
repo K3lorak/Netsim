@@ -73,7 +73,7 @@ class PackageSender: public IPackageReceiver{
         void send_package();
         const std::optional<Package>& get_sending_buffer() const {return buffer_;};
     protected:
-        void push_package(Package&&) {.emplace};
+        void push_package(Package&& buffered_package) {buffer_.emplace(buffered_package.get_id());};
 
         std::optional<Package> buffer_ = std::nullopt;
 };
