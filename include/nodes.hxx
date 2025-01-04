@@ -110,6 +110,12 @@ class Worker:public PackageSender, public IPackageReceiver
         void receive_package(Package&& package) override{(*q_).push(std::move(package));};
         ElementID get_id() const override { return id_; }
 
+        ConstIterator begin() const override{return q_->begin();}
+        ConstIterator end() const override{return q_->end();}
+        ConstIterator cbegin() const override{return q_->cbegin();}
+        ConstIterator cend() const override{return q_->cend();}
+
+
     private:
         ElementID id_;
         TimeOffset pd_;
