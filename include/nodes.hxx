@@ -107,6 +107,9 @@ class Worker:public PackageSender, public IPackageReceiver
         void do_work(Time t);
         TimeOffset get_processing_duration() const {return pd_;}
         Time get_package_processing_start_time() const {return t_;}
+        void receive_package(Package&& package) override{(*q_).push(std::move(package));};
+        ElementID get_id() const override { return id_; }
+
     private:
         ElementID id_;
         TimeOffset pd_;
