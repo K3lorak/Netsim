@@ -3,6 +3,7 @@
 //
 #include "nodes.hxx"
 
+
 void ReceiverPreferences::add_receiver(IPackageReceiver* r)
 {
     double new_prob = 1/preferences_.size() + 1;
