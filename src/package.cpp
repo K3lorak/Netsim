@@ -24,7 +24,7 @@ Package::Package(){
         freed_IDs.erase(*freed_IDs.begin());
     }
     assigned_IDs.insert(id_);
-};
+}
 
 Package::Package(Package&& other) noexcept : id_(std::move(other.id_)){
     id_ = other.id_;
