@@ -37,12 +37,14 @@ IPackageReceiver* ReceiverPreferences::choose_receiver()
 
 void PackageSender::send_package()
 {
-
-}
-
-void PackageSender::push_package(Package&&)
-{
-
+    if(buffer_.has_value()){
+        IPackageReceiver* receiver = receiver_preferences_.choose_receiver();
+        (*receiver).receive_package(std::move(*buffer_));
+        buffer_.reset();
+    }
+    else{
+        return;
+    }
 }
 
 

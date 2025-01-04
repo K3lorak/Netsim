@@ -35,7 +35,7 @@ class Storehouse:public IPackageReceiver
         using ConstIterator = std::list<Package>::const_iterator;
 
         Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)):id_(id), d_(std::move(d)) {}
-        void receive_package(Package&&) override{}
+        void receive_package(Package&& package) override{(*d_).push(std::move(package));}
         ElementID get_id() const override {return  id_;}
 
         ConstIterator begin() const override{return d_->begin();}
@@ -82,7 +82,7 @@ class PackageSender: public IPackageReceiver{
         void send_package();
         const std::optional<Package>& get_sending_buffer() const {return buffer_;};
     protected:
-        void push_package(Package&&) {.emplace};
+        void push_package(Package&& buffered_package) {buffer_.emplace(buffered_package.get_id());};
 
         std::optional<Package> buffer_ = std::nullopt;
 };
@@ -101,13 +101,14 @@ class Ramp: public PackageSender{
 class Worker:public PackageSender, public IPackageReceiver
 {
     public:
-        Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q) : id_(id), pd_(pd), q_(std::move(q)){}
+        Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q) : PackageSender(), id_(id), pd_(pd), q_(std::move(q)){}
         void do_work(Time t){}
-        TimeOffset get_processing_duration() const {}
-        Time get_package_processing_start_time() const {}
+        TimeOffset get_processing_duration() const {return pd_;}
+        Time get_package_processing_start_time() const {return t_;}
     private:
         ElementID id_;
         TimeOffset pd_;
+        Time t_;
         std::unique_ptr<IPackageQueue> q_;
         std::optional<Package> buffer_ = std::nullopt;
 };
