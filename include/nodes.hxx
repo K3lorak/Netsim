@@ -71,7 +71,7 @@ class PackageSender: public IPackageReceiver{
         PackageSender() = default;
         PackageSender(PackageSender&&) = default;
         void send_package();
-        std::optional<Package>& get_sending_buffer() const {return (std::optional<Package>&) std::nullopt;};
+        const std::optional<Package>& get_sending_buffer() const {return (std::optional<Package>) std::nullopt;};
     protected:
         void push_package(Package&&);
 };
