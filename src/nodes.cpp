@@ -46,3 +46,14 @@ void PackageSender::push_package(Package&&)
 }
 
 
+
+void Ramp::deliver_goods(Time t)
+{
+    if (t%di_ == 0)
+    {
+        send_package();
+    }
+
+}
+
+
