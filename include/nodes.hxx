@@ -33,7 +33,7 @@ class Storehouse:public IPackageReceiver
 {
     public:
         Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)):id_(id), d_(std::move(d)) {}
-        void receive_package(Package&&) override{}
+        void receive_package(Package&& package) override{(*d_).push(std::move(package));}
         ElementID get_id() const override {return  id_;}
     private:
         ElementID id_;
