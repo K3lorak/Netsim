@@ -46,5 +46,15 @@ void PackageSender::send_package()
         return;
     }
 }
+void Worker::do_work(Time t){
+     if (!buffer_.has_value() && !q_->empty()){
+        t_ = t;
+        buffer_.emplace(q_->pop());
+    }
 
+    if (t - t_ + 1 == pd_) {
+        push_package(Package(buffer_.value().get_id()));
+        buffer_.reset();
+    }
+}
 
