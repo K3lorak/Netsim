@@ -4,11 +4,17 @@
 #include "nodes.hxx"
 
 void ReceiverPreferences::add_receiver(IPackageReceiver* r)
-
-IPackageReceiver* ReceiverPreferences::choose_receiver()
 {
+    double new_prop = 1/preferences_.size() + 1;
+    for (auto i = preferences_.begin(); i != preferences_.end(); i++)
+    {
+        i->second = new_prop;
+    }
+    preferences_.insert(preferences_pair(r, new_prop));
 
 }
+
+IPackageReceiver* ReceiverPreferences::choose_receiver()
 {
     double rn = pg_();
     if (rn == 0 )return preferences_.begin()->first;
