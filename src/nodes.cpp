@@ -51,11 +51,16 @@ void PackageSender::send_package()
 
 void Ramp::deliver_goods(Time t)
 {
-    if (t%di_ == 0)
-    {
-        send_package();
-    }
 
+    if (!buffer_)
+    {
+        push_package(Package());
+        buffer_.emplace(id_);
+        t_ = t;
+    } else if ((t - t_) % di_== 0)
+    {
+        push_package(Package());
+    }
 }
 
 

@@ -89,13 +89,15 @@ class PackageSender: public IPackageReceiver{
 
 class Ramp: public PackageSender{
     public:
-        Ramp(ElementID id,TimeOffset di): PackageSender(), id_(id), di_(di){};
+        Ramp(ElementID id,TimeOffset di): PackageSender(), id_(id), di_(di),buffer_(std::nullopt){};
         void deliver_goods(Time t);
         TimeOffset get_delivery_interval() const{return di_;};
-        ElementID get_id(void) const{return id_;};
+        ElementID get_id() const{return id_;};
     private:
         ElementID id_;
         TimeOffset di_;
+        Time t_;
+        std::optional<Package> buffer_;
 };
 
 class Worker:public PackageSender, public IPackageReceiver
