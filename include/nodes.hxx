@@ -90,11 +90,12 @@ class Worker:public PackageSender, public IPackageReceiver
     public:
         Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q) : PackageSender(), id_(id), pd_(pd), q_(std::move(q)){}
         void do_work(Time t){}
-        TimeOffset get_processing_duration() const {}
-        Time get_package_processing_start_time() const {}
+        TimeOffset get_processing_duration() const {return pd_;}
+        Time get_package_processing_start_time() const {return t_;}
     private:
         ElementID id_;
         TimeOffset pd_;
+        Time t_;
         std::unique_ptr<IPackageQueue> q_;
         std::optional<Package> buffer_ = std::nullopt;
 };
