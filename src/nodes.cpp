@@ -40,6 +40,7 @@ IPackageReceiver* ReceiverPreferences::choose_receiver()
             return i->first;
         }
     }
+    return 0;
 }
 
 void PackageSender::send_package()
