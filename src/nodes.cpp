@@ -35,3 +35,14 @@ IPackageReceiver* ReceiverPreferences::choose_receiver()
     }
 }
 
+void PackageSender::send_package()
+{
+
+}
+
+void PackageSender::push_package(Package&&)
+{
+
+}
+
+
