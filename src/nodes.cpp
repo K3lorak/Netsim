@@ -7,17 +7,28 @@ using ReceiverPair = std::pair<IPackageReceiver* const, double>;
 
 void ReceiverPreferences::add_receiver(IPackageReceiver* r)
 {
-    double new_prob = 1/preferences_.size() + 1;
-    for (auto i = preferences_.begin(); i != preferences_.end(); i++)
+    if (preferences_.empty())
     {
-        i->second = new_prob;
+        preferences_[r] = 1.;
+
+    }else
+    {
+        double new_prob = 1./(preferences_.size() + 1);
+        for (auto i = preferences_.begin(); i != preferences_.end(); i++)
+        {
+            i->second = new_prob;
+        }
+        //preferences_.insert(preferences_pair(r, new_prob));
+        preferences_[r] = new_prob;
     }
-    preferences_.insert(preferences_pair(r, new_prob));
+
 
 }
 
 void ReceiverPreferences::remove_receiver(IPackageReceiver* r)
 {
+    if (preferences_.empty())return;
+
     preferences_.erase(r);
     double new_prob = 1/preferences_.size();
     for (auto i = preferences_.begin(); i != preferences_.end(); i++)
