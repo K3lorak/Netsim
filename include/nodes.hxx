@@ -13,7 +13,7 @@
 #include <optional>
 #include <memory>
 #include <map>
-
+#include <buffer>
 
 class IPackageReceiver
 {
@@ -71,9 +71,11 @@ class PackageSender: public IPackageReceiver{
         PackageSender() = default;
         PackageSender(PackageSender&&) = default;
         void send_package();
-        const std::optional<Package>& get_sending_buffer() const {return (std::optional<Package>) std::nullopt;};
+        const std::optional<Package>& get_sending_buffer() const {return buffer_;};
     protected:
-        void push_package(Package&&);
+        void push_package(Package&&) {.emplace};
+
+        std::optional<Package> buffer_ = std::nullopt;
 };
 
 class Ramp: public PackageSender{
