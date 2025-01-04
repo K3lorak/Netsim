@@ -3,6 +3,7 @@
 //
 #include "nodes.hxx"
 
+using ReceiverPair = std::pair<IPackageReceiver* const, double>;
 
 void ReceiverPreferences::add_receiver(IPackageReceiver* r)
 {

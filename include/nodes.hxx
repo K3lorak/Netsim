@@ -27,13 +27,13 @@ class IPackageReceiver
         virtual const_iterator end() const = 0;
         virtual const_iterator cbegin() const = 0;
         virtual const_iterator cend() const = 0;
+
+        virtual ~IPackageReceiver() = default;
 };
 
 class Storehouse:public IPackageReceiver
 {
     public:
-        using ConstIterator = std::list<Package>::const_iterator;
-
         Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)):id_(id), d_(std::move(d)) {}
         void receive_package(Package&& package) override{(*d_).push(std::move(package));}
         ElementID get_id() const override {return  id_;}
@@ -56,11 +56,11 @@ class ReceiverPreferences{
         using preferences_pair = std::pair<IPackageReceiver*, double>;
         using const_iterator = preferences_t::const_iterator;
 
-        ReceiverPreferences(ProbabilityGenerator pg = probability_generator ):pg_(pg){};
+        explicit ReceiverPreferences(ProbabilityGenerator pg = probability_generator ):pg_(std::move(pg)){};
         void add_receiver(IPackageReceiver* r);
         void remove_receiver(IPackageReceiver* r);
-        IPackageReceiver* choose_receiver(void);
-        preferences_t& get_preferences(void) {return preferences_;}
+        IPackageReceiver* choose_receiver();
+        const preferences_t& get_preferences() const {return this->preferences_;};
     //usunąlem const z linijki wyzej bo z nim byly bledy
 
         const_iterator begin() const {return preferences_.begin();};
