@@ -33,9 +33,19 @@ class IPackageReceiver
 class Storehouse:public IPackageReceiver
 {
     public:
+        using ConstIterator = std::list<Package>::const_iterator;
+
         Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)):id_(id), d_(std::move(d)) {}
         void receive_package(Package&&) override{}
         ElementID get_id() const override {return  id_;}
+
+        ConstIterator begin() const override{return d_->begin();}
+        ConstIterator end() const override{return d_->end();}
+        ConstIterator cbegin() const override{return d_->cbegin();}
+        ConstIterator cend() const override{return d_->cend();}
+
+
+
     private:
         ElementID id_;
         std::unique_ptr<IPackageStockpile> d_;
@@ -77,10 +87,13 @@ class PackageSender: public IPackageReceiver{
 
 class Ramp: public PackageSender{
     public:
-        Ramp(ElementID id,TimeOffset di);
+        Ramp(ElementID id,TimeOffset di):id_(id), di_(di){};
         void deliver_goods(Time t);
-        TimeOffset get_delivery_interval() const;
-        ElementID det_id(void) const;
+        TimeOffset get_delivery_interval() const{return di_;};
+        ElementID get_id(void) const{return id_;};
+    private:
+        ElementID id_;
+        TimeOffset di_;
 };
 
 class Worker:public PackageSender, public IPackageReceiver
