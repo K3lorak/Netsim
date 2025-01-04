@@ -44,18 +44,20 @@ class Storehouse:public IPackageReceiver
 class ReceiverPreferences{
     public:
         using preferences_t = std::map<IPackageReceiver*, double>;
+        using preferences_pair = std::pair<IPackageReceiver*, double>;
         using ConstIterator = preferences_t::const_iterator;
 
         ReceiverPreferences(ProbabilityGenerator pg = probability_generator ):pg_(pg){};
-        void add_receiver(IPackageReceiver* r);
-        void remove_receiver(IPackageReceiver* r);
+        void add_receiver(IPackageReceiver* r){};
+        void remove_receiver(IPackageReceiver* r){preferences_.erase(r);}
         IPackageReceiver* choose_receiver(void);
-        preferences_t& get_preferences(void) const;
+        preferences_t& get_preferences(void) {return preferences_;}
+    //usunąlem const z linijki wyzej bo z nim byly bledy
 
-        virtual ConstIterator begin() {return preferences_.begin();};
-        virtual ConstIterator end() {return preferences_.end();};
-        virtual ConstIterator cbegin() {return preferences_.cbegin();};
-        virtual ConstIterator cend() {return preferences_.cend();};
+        ConstIterator begin() {return preferences_.begin();};
+        ConstIterator end() {return preferences_.end();};
+        ConstIterator cbegin() {return preferences_.cbegin();};
+        ConstIterator cend() {return preferences_.cend();};
     private:
         preferences_t preferences_;
     //obiekt funkcyjny zwracajacy losowa wartosc
