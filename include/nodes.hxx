@@ -17,16 +17,16 @@
 class IPackageReceiver
 {
     public:
-        using ConstIterator = std::list<Package>::const_iterator;
+        using const_iterator = std::list<Package>::const_iterator;
 
         virtual void receive_package(Package&&) = 0;
         virtual  ElementID get_id() const = 0;
 
 
-        virtual ConstIterator begin() const = 0;
-        virtual ConstIterator end() const = 0;
-        virtual ConstIterator cbegin() const = 0;
-        virtual ConstIterator cend() const = 0;
+        virtual const_iterator begin() const = 0;
+        virtual const_iterator end() const = 0;
+        virtual const_iterator cbegin() const = 0;
+        virtual const_iterator cend() const = 0;
 };
 
 class Storehouse:public IPackageReceiver
@@ -38,10 +38,10 @@ class Storehouse:public IPackageReceiver
         void receive_package(Package&& package) override{(*d_).push(std::move(package));}
         ElementID get_id() const override {return  id_;}
 
-        ConstIterator begin() const override{return d_->begin();}
-        ConstIterator end() const override{return d_->end();}
-        ConstIterator cbegin() const override{return d_->cbegin();}
-        ConstIterator cend() const override{return d_->cend();}
+        const_iterator begin() const override{return d_->begin();}
+        const_iterator end() const override{return d_->end();}
+        const_iterator cbegin() const override{return d_->cbegin();}
+        const_iterator cend() const override{return d_->cend();}
 
 
 
@@ -54,7 +54,7 @@ class ReceiverPreferences{
     public:
         using preferences_t = std::map<IPackageReceiver*, double>;
         using preferences_pair = std::pair<IPackageReceiver*, double>;
-        using ConstIterator = preferences_t::const_iterator;
+        using const_iterator = preferences_t::const_iterator;
 
         ReceiverPreferences(ProbabilityGenerator pg = probability_generator ):pg_(pg){};
         void add_receiver(IPackageReceiver* r);
@@ -63,17 +63,17 @@ class ReceiverPreferences{
         preferences_t& get_preferences(void) {return preferences_;}
     //usunąlem const z linijki wyzej bo z nim byly bledy
 
-        ConstIterator begin() {return preferences_.begin();};
-        ConstIterator end() {return preferences_.end();};
-        ConstIterator cbegin() {return preferences_.cbegin();};
-        ConstIterator cend() {return preferences_.cend();};
+        const_iterator begin() const {return preferences_.begin();};
+        const_iterator end() const {return preferences_.end();};
+        const_iterator cbegin() const {return preferences_.cbegin();};
+        const_iterator cend() const {return preferences_.cend();};
     private:
         preferences_t preferences_;
     //obiekt funkcyjny zwracajacy losowa wartosc
         ProbabilityGenerator pg_;
 };
 
-class PackageSender: public IPackageReceiver{
+class PackageSender{
     public:
         ReceiverPreferences receiver_preferences_;
 
@@ -81,6 +81,7 @@ class PackageSender: public IPackageReceiver{
         PackageSender(PackageSender&&) = default;
         void send_package();
         const std::optional<Package>& get_sending_buffer() const {return buffer_;};
+
     protected:
         void push_package(Package&& buffered_package) {buffer_.emplace(buffered_package.get_id());};
 
@@ -110,10 +111,10 @@ class Worker:public PackageSender, public IPackageReceiver
         void receive_package(Package&& package) override{(*q_).push(std::move(package));};
         ElementID get_id() const override { return id_; }
 
-        ConstIterator begin() const override{return q_->begin();}
-        ConstIterator end() const override{return q_->end();}
-        ConstIterator cbegin() const override{return q_->cbegin();}
-        ConstIterator cend() const override{return q_->cend();}
+        const_iterator begin() const override{return q_->begin();}
+        const_iterator end() const override{return q_->end();}
+        const_iterator cbegin() const override{return q_->cbegin();}
+        const_iterator cend() const override{return q_->cend();}
 
 
     private:

@@ -28,12 +28,19 @@ void ReceiverPreferences::remove_receiver(IPackageReceiver* r)
 IPackageReceiver* ReceiverPreferences::choose_receiver()
 {
     double rn = pg_();
-    if (rn == 0 )return preferences_.begin()->first;
+    if (rn == 0 )
+    {
+        return preferences_.begin()->first;
+    }
     double prob_sum = preferences_.begin()->second;
     for (auto i = std::next(begin()); i != end(); i++ )
     {
-        if (prob_sum < rn and (prob_sum += i->second) >= rn  )return i->first;
+        if (prob_sum < rn and (prob_sum += i->second) >= rn  )
+        {
+            return i->first;
+        }
     }
+    return 0;
 }
 
 void PackageSender::send_package()
