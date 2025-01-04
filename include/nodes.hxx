@@ -66,11 +66,12 @@ class ReceiverPreferences{
 
 class PackageSender: public IPackageReceiver{
     public:
+        ReceiverPreferences receiver_preferences_;
+
         PackageSender() = default;
         PackageSender(PackageSender&&) = default;
-        ReceiverPreferences receiver_preferences_();
-        void send_package(void);
-        std::optional<Package>& get_sending_buffer(void) const;
+        void send_package();
+        std::optional<Package>& get_sending_buffer() const {return (std::optional<Package>&) std::nullopt;};
     protected:
         void push_package(Package&&);
 };
