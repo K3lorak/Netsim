@@ -8,6 +8,7 @@
 #include "types.hxx"
 #include "package.hxx"
 #include "storage_types.hxx"
+#include "helpers.hxx"
 #include <cstdlib>
 #include <optional>
 #include <memory>
@@ -17,8 +18,16 @@
 class IPackageReceiver
 {
     public:
+        using ConstIterator = std::list<Package>::const_iterator;
+
         virtual void receive_package(Package&&) = 0;
         virtual  ElementID get_id() const = 0;
+
+
+        virtual ConstIterator begin() const = 0;
+        virtual ConstIterator end() const = 0;
+        virtual ConstIterator cbegin() const = 0;
+        virtual ConstIterator cend() const = 0;
 };
 
 class Storehouse:public IPackageReceiver
@@ -35,13 +44,22 @@ class Storehouse:public IPackageReceiver
 class ReceiverPreferences{
     public:
         using preferences_t = std::map<IPackageReceiver*, double>;
-        using const_iterator = preferences_t::const_iterator;
+        using ConstIterator = preferences_t::const_iterator;
 
-        ReceiverPreferences(ProbabilityGenerator pg);
+        ReceiverPreferences(ProbabilityGenerator pg = probability_generator ):pg_(pg){};
         void add_receiver(IPackageReceiver* r);
         void remove_receiver(IPackageReceiver* r);
         IPackageReceiver* choose_receiver(void);
         preferences_t& get_preferences(void) const;
+
+        virtual ConstIterator begin() {return preferences_.begin();};
+        virtual ConstIterator end() {return preferences_.end();};
+        virtual ConstIterator cbegin() {return preferences_.cbegin();};
+        virtual ConstIterator cend() {return preferences_.cend();};
+    private:
+        preferences_t preferences_;
+    //obiekt funkcyjny zwracajacy losowa wartosc
+        ProbabilityGenerator pg_;
 };
 
 class PackageSender: public IPackageReceiver{
