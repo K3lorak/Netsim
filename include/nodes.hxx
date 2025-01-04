@@ -94,6 +94,7 @@ class Worker:public PackageSender, public IPackageReceiver
         ElementID id_;
         TimeOffset pd_;
         std::unique_ptr<IPackageQueue> q_;
+        std::optional<Package> buffer_ = std::nullopt;
 };
 
 #endif //NODES_HXX
