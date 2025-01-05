@@ -13,25 +13,26 @@ void ReceiverPreferences::add_receiver(IPackageReceiver* r)
 
     }else
     {
-        double new_prob = 1./(preferences_.size() + 1);
-        for (auto i = preferences_.begin(); i != preferences_.end(); i++)
+        auto new_prob = 1./static_cast<double>(preferences_.size() + 1);
+        for (auto i = preferences_.begin(); i != preferences_.end(); ++i)
         {
             i->second = new_prob;
         }
         //preferences_.insert(preferences_pair(r, new_prob));
         preferences_[r] = new_prob;
     }
-
-
 }
 
 void ReceiverPreferences::remove_receiver(IPackageReceiver* r)
 {
+    auto to_remove = preferences_.find(r);
+    if (to_remove == end())return;
     if (preferences_.empty())return;
 
-    preferences_.erase(r);
-    double new_prob = 1/preferences_.size();
-    for (auto i = preferences_.begin(); i != preferences_.end(); i++)
+
+    preferences_.erase(to_remove);
+    double new_prob = 1./preferences_.size();
+    for (auto i = preferences_.begin(); i != preferences_.end(); ++i)
     {
         i->second = new_prob;
     }
@@ -40,19 +41,27 @@ void ReceiverPreferences::remove_receiver(IPackageReceiver* r)
 IPackageReceiver* ReceiverPreferences::choose_receiver()
 {
     double rn = pg_();
+    if (rn < 0 || rn > 1)return nullptr;
+    if(preferences_.empty())return nullptr;
     if (rn == 0 )
     {
         return preferences_.begin()->first;
     }
-    double prob_sum = preferences_.begin()->second;
-    for (auto i = std::next(begin()); i != end(); i++ )
+    double prob_sum = 0;
+    for (auto i = begin(); i != end(); i++ )
     {
-        if (prob_sum < rn and (prob_sum += i->second) >= rn  )
+        if (prob_sum < rn )
         {
-            return i->first;
+            prob_sum += i->second;
+
+            if (prob_sum >= rn)
+            {
+                return i->first;
+            }
+
         }
     }
-    return 0;
+    return nullptr;
 }
 
 void PackageSender::send_package()
@@ -92,5 +101,4 @@ void Ramp::deliver_goods(Time t)
         push_package(Package());
     }
 }
-
 
