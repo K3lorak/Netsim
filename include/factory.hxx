@@ -38,14 +38,14 @@ public:
     NodeCollection<Ramp>::const_iterator ramp_cend() const{return node_r.cend();}
 //Dla Worker
     void add_worker(Worker&& w){node_w.add(std::move(w));}
-    void remove_worker(ElementID id){node_w.remove_by_id(id);}
+    void remove_worker(ElementID id);
     NodeCollection<Worker>::iterator find_worker_by_id(ElementID id){return node_w.find_by_id(id);}
     NodeCollection<Worker>::const_iterator find_worker_by_id(ElementID id) const{return node_w.find_by_id(id);}
     NodeCollection<Worker>::const_iterator worker_cbegin() const{return node_w.cbegin();}
     NodeCollection<Worker>::const_iterator worker_cend() const{return node_w.cend();}
 //Dla Storehouse
     void add_storehouse(Storehouse&& s){node_s.add(std::move(s));}
-    void remove_storehouse(ElementID id){node_s.remove_by_id(id);}
+    void remove_storehouse(ElementID id);
     NodeCollection<Storehouse>::iterator find_storehouse_by_id(ElementID id){return node_s.find_by_id(id);}
     NodeCollection<Storehouse>::const_iterator find_storehouse_by_id(ElementID id) const{return node_s.find_by_id(id);}
     NodeCollection<Storehouse>::const_iterator storehouse_cbegin() const{return node_s.cbegin();}
