@@ -14,8 +14,17 @@ public:
 
     void add(Node&& node);
     void remove_by_id(ElementID id);
-    NodeCollection<Node>::iterator find_by_id(ElementID id);
-    NodeCollection<Node>::const_iterator find_by_id(ElementID id) const;
+    NodeCollection<Node>::iterator find_by_id(ElementID id) {
+        return std::find_if(container.begin(), container.end(), [id](const Node& elem) {
+            return elem.get_id() == id;
+        });
+    }
+
+    NodeCollection<Node>::const_iterator find_by_id(ElementID id) const {
+        return std::find_if(container.begin(), container.end(), [id](const Node& elem) {
+            return elem.get_id() == id;
+        });
+    }
 
     iterator begin() { return c_.begin(); }
     iterator end() { return c_.end(); }
