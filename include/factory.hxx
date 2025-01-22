@@ -7,33 +7,37 @@
 class Factory{
 public:
 //Dla Ramp
-    void add_ramp(Ramp&&){};
-    void remove_ramp(ElementID id){};
-    NodeCollection<Ramp>::iterator find_ramp_by_id(ElementID id){};
-    NodeCollection<Ramp>::const_iterator find_ramp_by_id(ElementID id){};
-    NodeCollection<Ramp>::const_iterator ramp_cbegin() {};
-    NodeCollection<Ramp>::const_iterator ramp_cend() {};
+    void add_ramp(Ramp&& r){node_r.add(std::move(r));}
+    void remove_ramp(ElementID id){node_r.remove_by_id(id);}
+    NodeCollection<Ramp>::iterator find_ramp_by_id(ElementID id){return node_r.find_by_id(id);}
+    NodeCollection<Ramp>::const_iterator find_ramp_by_id(ElementID id) const{return node_r.find_by_id(id);}
+    NodeCollection<Ramp>::const_iterator ramp_cbegin() const{return node_r.cbegin();}
+    NodeCollection<Ramp>::const_iterator ramp_cend() const{return node_r.cend();}
 //Dla Worker
-    void add_worker(Ramp&&){};
-    void remove_worker(ElementID id){};
-    NodeCollection<Worker>::iterator find_worker_by_id(ElementID id){};
-    NodeCollection<Worker>::const_iterator find_worker_by_id(ElementID id){};
-    NodeCollection<Worker>::const_iterator worker_cbegin() {};
-    NodeCollection<Worker>::const_iterator worker_cend() {};
+    void add_worker(Worker&& w){node_w.add(std::move(w));}
+    void remove_worker(ElementID id){node_w.remove_by_id(id);}
+    NodeCollection<Worker>::iterator find_worker_by_id(ElementID id){return node_w.find_by_id(id);}
+    NodeCollection<Worker>::const_iterator find_worker_by_id(ElementID id) const{return node_w.find_by_id(id);}
+    NodeCollection<Worker>::const_iterator worker_cbegin() const{return node_w.cbegin();}
+    NodeCollection<Worker>::const_iterator worker_cend() const{return node_w.cend();}
 //Dla Storehouse
-    void add_storehouse(Storehouse&&){};
-    void remove_storehouse(ElementID id){};
-    NodeCollection<Storehouse>::iterator find_storehouse_by_id(ElementID id){};
-    NodeCollection<Storehouse>::const_iterator find_storehouse_by_id(ElementID id){};
-    NodeCollection<Storehouse>::const_iterator storehouse_cbegin() {};
-    NodeCollection<Storehouse>::const_iterator storehouse_cend() {};
+    void add_storehouse(Storehouse&& s){node_s.add(std::move(s));}
+    void remove_storehouse(ElementID id){node_s.remove_by_id(id);}
+    NodeCollection<Storehouse>::iterator find_storehouse_by_id(ElementID id){return node_s.find_by_id(id);}
+    NodeCollection<Storehouse>::const_iterator find_storehouse_by_id(ElementID id) const{return node_s.find_by_id(id);}
+    NodeCollection<Storehouse>::const_iterator storehouse_cbegin() const{return node_s.cbegin();}
+    NodeCollection<Storehouse>::const_iterator storehouse_cend() const{return node_s.cend();}
 
-    bool is_consistent(){}];
-    void do_deliveries(Time t){};
-    void do_package_passing(void){};
-    void do_work(Time t){};
+    bool is_consistent() const;
+    void do_deliveries(Time t);
+    void do_package_passing(void);
+    void do_work(Time t);
 private:
     void remove_receiver(NodeCollection<Node>& collection, ElementID id){};
+
+    NodeCollection<Ramp> node_r;
+    NodeCollection<Worker> node_w;
+    NodeCollection<Storehouse> node_s;
 };
 
 #endif //FACTORY_HXX
