@@ -115,7 +115,7 @@ public:
     const_iterator end() const override{return q_->end();}
     const_iterator cbegin() const override{return q_->cbegin();}
     const_iterator cend() const override{return q_->cend();}
-
+    IPackageQueue* get_queue() const { return q_.get(); }
 
 private:
     ElementID id_;
