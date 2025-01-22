@@ -1,8 +1,31 @@
 #ifndef FACTORY_HXX
 #define FACTORY_HXX
 
+#include "storage_types.hxx"
 #include "nodes.hxx"
 
+template<class Node>
+class NodeCollection{
+public:
+    //aliasy na typy iteratorów - ze skryptu Factory
+    using container_t = typename std::list<Node>;
+    using iterator = typename container_t::iterator;
+    using const_iterator = typename container_t::const_iterator;
+
+    void add(Node&& node);
+    void remove_by_id(ElementID id);
+    NodeCollection<Node>::iterator find_by_id(ElementID id);
+    NodeCollection<Node>::const_iterator find_by_id(ElementID id) const;
+
+    iterator begin() { return c_.begin(); }
+    iterator end() { return c_.end(); }
+    const_iterator begin() const { return c_.cbegin(); }
+    const_iterator end() const { return c_.cend(); }
+    const_iterator cbegin() const { return c_.cbegin(); }
+    const_iterator cend() const { return c_.cend(); }
+private:
+    container_t c_;
+};
 
 class Factory{
 public:
@@ -33,6 +56,7 @@ public:
     void do_package_passing(void);
     void do_work(Time t);
 private:
+    template<class Node>
     void remove_receiver(NodeCollection<Node>& collection, ElementID id){};
 
     NodeCollection<Ramp> node_r;
