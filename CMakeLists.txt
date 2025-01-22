@@ -11,6 +11,7 @@ include_directories(
 
 # Pliki źródłowe aplikacji
 set(SOURCE_FILES
+        src/factory.cpp
         src/package.cpp
         src/storage_types.cpp
         src/helpers.cpp
