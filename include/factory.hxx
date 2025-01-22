@@ -7,7 +7,7 @@
 template<class Node>
 class NodeCollection{
 public:
-    //aliasy na typy iteratorów - ze skryptu Factory
+    //aliasy na typy iteratorów - ze skryptu Factory + jako kontener dałem listę
     using container_t = typename std::list<Node>;
     using iterator = typename container_t::iterator;
     using const_iterator = typename container_t::const_iterator;
