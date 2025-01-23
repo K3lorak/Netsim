@@ -105,4 +105,3 @@ void Ramp::deliver_goods(Time t)
         push_package(Package());
     }
 }
-
