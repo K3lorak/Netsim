@@ -314,4 +314,3 @@ void save_factory_structure(Factory& factory, std::ostream& os) {
 
     os.flush();
 }
-
