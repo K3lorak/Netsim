@@ -3,6 +3,7 @@
 
 #include "storage_types.hxx"
 #include "nodes.hxx"
+#include <algorithm>
 
 bool has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors);
 
@@ -68,7 +69,7 @@ public:
     void do_work(Time);
 private:
     template<class Node>
-    void remove_receiver(NodeCollection<Node>& collection, ElementID id){};
+    void remove_receiver(NodeCollection<Node>& collection, ElementID id);
 
     NodeCollection<Ramp> node_r;
     NodeCollection<Worker> node_w;
@@ -82,7 +83,7 @@ void Factory::remove_receiver(NodeCollection<Node>& collection, ElementID id) {
 
     auto receiver_ptr = dynamic_cast<IPackageReceiver*>(iter);
 
-    for (auto& ramp: cont_r) {
+    for (auto& ramp: node_r) {
         auto& _preferences = ramp.receiver_preferences_.get_preferences();
         for (auto _preference: _preferences) {
             if (_preference.first == receiver_ptr) {
@@ -92,7 +93,7 @@ void Factory::remove_receiver(NodeCollection<Node>& collection, ElementID id) {
         }
     }
 
-    for (auto& worker: cont_w) {
+    for (auto& worker: node_w) {
         auto& _preferences = worker.receiver_preferences_.get_preferences();
         for (auto _preference: _preferences) {
             if (_preference.first == receiver_ptr) {

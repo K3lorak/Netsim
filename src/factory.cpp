@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 
 void Factory::do_deliveries(Time t){
   for (auto &ramp : node_r)

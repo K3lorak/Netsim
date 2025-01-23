@@ -91,7 +91,7 @@ public:
     ReceiverPreferences receiver_preferences_;
 
     PackageSender() = default;
-    PackageSender(PackageSender&&) = default;
+    PackageSender(PackageSender&& p) = default;
     void send_package();
     const std::optional<Package>& get_sending_buffer() const {return buffer_;};
 
