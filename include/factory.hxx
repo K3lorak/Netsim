@@ -63,9 +63,9 @@ public:
     NodeCollection<Storehouse>::const_iterator storehouse_cend() const{return node_s.cend();}
 
     bool is_consistent() const;
-    void do_deliveries(Time t);
+    void do_deliveries(Time);
     void do_package_passing(void);
-    void do_work(Time t);
+    void do_work(Time);
 private:
     template<class Node>
     void remove_receiver(NodeCollection<Node>& collection, ElementID id){};
@@ -74,6 +74,35 @@ private:
     NodeCollection<Worker> node_w;
     NodeCollection<Storehouse> node_s;
 };
+
+template<class Node>
+void Factory::remove_receiver(NodeCollection<Node>& collection, ElementID id) {
+
+    auto iter = collection.find_by_id(id);
+
+    auto receiver_ptr = dynamic_cast<IPackageReceiver*>(iter);
+
+    for (auto& ramp: cont_r) {
+        auto& _preferences = ramp.receiver_preferences_.get_preferences();
+        for (auto _preference: _preferences) {
+            if (_preference.first == receiver_ptr) {
+                ramp.receiver_preferences_.remove_receiver(receiver_ptr);
+                break;
+            }
+        }
+    }
+
+    for (auto& worker: cont_w) {
+        auto& _preferences = worker.receiver_preferences_.get_preferences();
+        for (auto _preference: _preferences) {
+            if (_preference.first == receiver_ptr) {
+                worker.receiver_preferences_.remove_receiver(receiver_ptr);
+                break;
+            }
+        }
+    }
+}
+
 
 enum class ElementType {
     RAMP, WORKER, STOREHOUSE, LINK
