@@ -4,7 +4,6 @@
 #include "storage_types.hxx"
 #include "nodes.hxx"
 
-
 bool has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors);
 
 template<class Node>
@@ -18,13 +17,13 @@ public:
     void add(Node&& node);
     void remove_by_id(ElementID id);
     NodeCollection<Node>::iterator find_by_id(ElementID id) {
-        return std::find_if(container.begin(), container.end(), [id](const Node& elem) {
+        return std::find_if(c_.begin(), c_.end(), [id](const Node& elem) {
             return elem.get_id() == id;
         });
     }
 
     NodeCollection<Node>::const_iterator find_by_id(ElementID id) const {
-        return std::find_if(container.begin(), container.end(), [id](const Node& elem) {
+        return std::find_if(c_.begin(), c_.end(), [id](const Node& elem) {
             return elem.get_id() == id;
         });
     }
@@ -74,6 +73,15 @@ private:
     NodeCollection<Ramp> node_r;
     NodeCollection<Worker> node_w;
     NodeCollection<Storehouse> node_s;
+};
+
+enum class ElementType {
+    RAMP, WORKER, STOREHOUSE, LINK
+};
+
+struct ParsedLineData {
+    ElementType element_type;
+    std::map<std::string, std::string> parameters;
 };
 
 ParsedLineData parse_line(std::string& line);

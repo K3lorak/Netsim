@@ -2,7 +2,7 @@
 #include "package.hxx"
 #include "storage_types.hxx"
 #include "nodes.hxx"
-
+#include "factory.hxx"
 
 TEST(FactoryTest, IsConsistentCorrect) {
     // R -> W -> S

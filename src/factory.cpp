@@ -1,55 +1,66 @@
 #include "factory.hxx"
 #include "nodes.hxx"
 #include <stdexcept>
-
-bool Factory::is_consistent() const{
-  return 0
-}
+#include <sstream>
+#include <iostream>
 
 void Factory::do_deliveries(Time t){
-  for (auto &ramp : cont_r)
+  for (auto &ramp : node_r)
         ramp.deliver_goods(t);
 }
 
 void Factory::do_package_passing(void){
-  for (auto &ramp : cont_r)
+  for (auto &ramp : node_r)
         ramp.send_package();
 
-    for (auto &worker : cont_w)
+    for (auto &worker : node_w)
         worker.send_package();
 }
 
 void Factory::do_work(Time t){
-  for(auto &ramp : const_w)
-    worker.do_work(t)
+  for(auto &worker : node_w)
+    worker.do_work(t);
 }
 
 void Factory::remove_worker(ElementID id){
-  Worker* node = &(*cont_w.find_by_id(id));
+  Worker* node = &(*node_w.find_by_id(id));
 
-  std::for_each(cont_w.begin(), cont_w.end(), [node](Worker& worker) {
+  std::for_each(node_w.begin(), node_w.end(), [node](Worker& worker) {
         worker.receiver_preferences_.remove_receiver(node);
     });
 
-  std::for_each(cont_r.begin(), cont_r.end(), [node](Ramp& ramp) {
+  std::for_each(node_r.begin(), node_r.end(), [node](Ramp& ramp) {
         ramp.receiver_preferences_.remove_receiver(node);
     });
 
-  cont_w.remove_by_id(id);
+  node_w.remove_by_id(id);
 }
 
 void Factory::remove_storehouse(ElementID id)
 {
-    Storehouse* node = &(*cont_s.find_by_id(id));
-    std::for_each(cont_w.begin(), cont_w.end(), [&node](Worker& ramp) {
+    Storehouse* node = &(*node_s.find_by_id(id));
+    std::for_each(node_w.begin(), node_w.end(), [&node](Worker& ramp) {
         ramp.receiver_preferences_.remove_receiver(node);
     });
 
-    std::for_each(cont_w.begin(), cont_w.end(), [&node](Worker& worker) {
+    std::for_each(node_w.begin(), node_w.end(), [&node](Worker& worker) {
         worker.receiver_preferences_.remove_receiver(node);
     });
-    cont_s.remove_by_id(id);
+    node_s.remove_by_id(id);
 }
+
+std::vector<std::string> character_split(const std::string& splittable_str, char delimiter) {
+    std::stringstream parameter_stream(splittable_str);
+    std::string part;
+    std::vector<std::string> result;
+
+    while(std::getline(parameter_stream, part, delimiter)) {
+        result.push_back(part);
+    }
+
+    return result;
+}
+
 ParsedLineData parse_line(std::string& line){
 
   std::vector<std::string> tokens;
@@ -83,7 +94,7 @@ ParsedLineData parse_line(std::string& line){
 
     return parsed_data;
 }
-};
+
 PackageQueueType get_package_queue_type(std::string& package_queue_type_str) {
     std::map<std::string, PackageQueueType> str_type_map{
             {"LIFO", PackageQueueType::LIFO},
@@ -189,9 +200,9 @@ Factory load_factory_structure(std::istream& is){
 }
 std::string queue_type_str(PackageQueueType package_queue_type) {
     switch(package_queue_type) {
-        case FIFO:
+        case PackageQueueType::FIFO:
             return "FIFO";
-        case LIFO:
+        case PackageQueueType::LIFO:
             return "LIFO";
     }
     return {};
@@ -249,7 +260,7 @@ bool has_reachable_storehouse(const PackageSender* sender, std::map<const Packag
 
     node_colors[sender] = NodeColor::VISITED;
 
-    if (sender->receiver_preferences_.get_preferences().empty())throw std::logic_error('Sender doesnt have any receivers');
+    if (sender->receiver_preferences_.get_preferences().empty())throw std::logic_error("Sender doesnt have any receivers");
 
     bool sender_has_different_receiver_than_themself = false;
     for (auto& receiver : sender->receiver_preferences_.get_preferences())
