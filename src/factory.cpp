@@ -5,66 +5,56 @@
 #include <iostream>
 #include <algorithm>
 
-bool has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors)
-{
-    if (node_colors[sender] == NodeColor::VERIFIED) return true;
+bool has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors) {
+    if (node_colors[sender] == NodeColor::VERIFIED) {
+        return true;
+    }
 
     node_colors[sender] = NodeColor::VISITED;
 
-    if (sender->receiver_preferences_.get_preferences().empty())throw std::logic_error("Sender doesnt have any receivers");
-
-    //bool sender_has_different_receiver_than_themself = false;
-    for (auto& receiver : sender->receiver_preferences_.get_preferences())
-    {
-        if (receiver.first->get_receiver_type() == ReceiverType::STOREHOUSE)
-            return true;
-            //sender_has_different_receiver_than_themself = true;
-        else if (receiver.first->get_receiver_type() == ReceiverType::WORKER)
-        {
-            auto receiver_ptr = receiver.first;
-            auto worker_ptr = dynamic_cast<class Worker*>(receiver_ptr);
-            if (worker_ptr == nullptr) continue;
-            auto sendrecv_ptr = dynamic_cast<PackageSender*>(worker_ptr);
-            if (sendrecv_ptr == nullptr) continue;
-
-            if (sendrecv_ptr == sender) continue;
-            //sender_has_different_receiver_than_themself = true;
-            if (node_colors[sendrecv_ptr] == NodeColor::UNVISITED && has_reachable_storehouse(sendrecv_ptr, node_colors))
-                return true;
-        }
-
+    if (sender->receiver_preferences_.get_preferences().empty()) {
+        throw std::logic_error("Sender does not have any receivers");
     }
+
+    for (const auto& receiver : sender->receiver_preferences_.get_preferences()) {
+        if (receiver.first->get_receiver_type() == ReceiverType::STOREHOUSE) {
+            return true;
+        } else if (receiver.first->get_receiver_type() == ReceiverType::WORKER) {
+            PackageSender* sendrecv_ptr = dynamic_cast<PackageSender*>(dynamic_cast<class Worker*>(receiver.first));
+
+            if (sendrecv_ptr == sender) {
+                continue;
+            }
+
+            if (node_colors[sendrecv_ptr] == NodeColor::UNVISITED && has_reachable_storehouse(sendrecv_ptr, node_colors)) {
+                return true;
+            }
+        }
+    }
+
     node_colors[sender] = NodeColor::VERIFIED;
-
-    //if (sender_has_different_receiver_than_themself)return true;
-
     throw std::logic_error("Error");
 }
 
-bool Factory::is_consistent() const
-{
-    std::map<const PackageSender*, NodeColor> node_colors ;
-    auto set_colors = [&node_colors](const auto container)
-    {
-        for (const auto& item : container)
-        {
+bool Factory::is_consistent() const {
+    std::map<const PackageSender*, NodeColor> kolor;
+
+    auto set_unvisited_colors = [&kolor](const auto& container) {
+        for (const auto& item : container) {
             const PackageSender* sender = dynamic_cast<const PackageSender*>(&item);
-            if (sender == nullptr) continue;
-            node_colors[sender] = NodeColor::UNVISITED;
+            kolor[sender] = NodeColor::UNVISITED;
         }
     };
-    set_colors(node_r);
-    set_colors(node_w);
-    try
-    {
-        for (auto& ramp : node_r)
-        {
+
+    set_unvisited_colors(node_w);
+    set_unvisited_colors(node_r);
+
+    try {
+        for (const auto& ramp : node_r) {
             const PackageSender* sender = dynamic_cast<const PackageSender*>(&ramp);
-            if (sender == nullptr) continue;
-            has_reachable_storehouse(sender, node_colors);
+            has_reachable_storehouse(sender, kolor);
         }
-    }catch (const std::logic_error&)
-    {
+    } catch (const std::logic_error&) {
         return false;
     }
 
@@ -136,13 +126,13 @@ ParsedLineData parse_line(std::string& line){
   std::istringstream token_stream(line);
   char delimiter = ' ';
 
-  while (std::getline(token_stream, token, delimiter))
+    while (std::getline(token_stream, token, delimiter))
         tokens.push_back(token);
 
-  ParsedLineData parsed_data;
+    ParsedLineData parsed_data;
 
-  std::map<std::string, ElementType> element_types{
-            {"RAMP", ElementType::RAMP},
+    std::map<std::string, ElementType> element_types{
+            {"LOADING_RAMP", ElementType::RAMP},
             {"WORKER", ElementType::WORKER},
             {"STOREHOUSE", ElementType::STOREHOUSE},
             {"LINK", ElementType::LINK},
