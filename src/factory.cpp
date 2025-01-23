@@ -57,6 +57,16 @@ bool Factory::is_consistent() const {
     } catch (const std::logic_error&) {
         return false;
     }
+    set_unvisited_colors(node_w);
+    set_unvisited_colors(node_r);
+    try {
+        for (const auto& worker : node_w) {
+            const PackageSender* sender = dynamic_cast<const PackageSender*>(&worker);
+            has_reachable_storehouse(sender, kolor);
+        }
+    } catch (const std::logic_error&) {
+        return false;
+    }
 
     return true;
 }
