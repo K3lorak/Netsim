@@ -4,6 +4,9 @@
 #include "storage_types.hxx"
 #include "nodes.hxx"
 
+
+bool has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors);
+
 template<class Node>
 class NodeCollection{
 public:

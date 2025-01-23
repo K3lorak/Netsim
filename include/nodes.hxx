@@ -14,6 +14,18 @@
 #include <memory>
 #include <map>
 
+
+enum class ReceiverType
+{
+    WORKER,
+    STOREHOUSE
+};
+
+enum class NodeColor
+{
+    UNVISITED, VISITED, VERIFIED
+};
+
 class IPackageReceiver
 {
 public:
@@ -21,7 +33,7 @@ public:
 
     virtual void receive_package(Package&&) = 0;
     virtual  ElementID get_id() const = 0;
-
+    virtual ReceiverType get_receiver_type() const = 0;
 
     virtual const_iterator begin() const = 0;
     virtual const_iterator end() const = 0;
@@ -37,6 +49,7 @@ public:
     Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)):id_(id), d_(std::move(d)) {}
     void receive_package(Package&& package) override{(*d_).push(std::move(package));}
     ElementID get_id() const override {return  id_;}
+    ReceiverType get_receiver_type() const override{return ReceiverType::STOREHOUSE;};
 
     const_iterator begin() const override{return d_->begin();}
     const_iterator end() const override{return d_->end();}
@@ -110,6 +123,8 @@ public:
     Time get_package_processing_start_time() const {return t_;}
     void receive_package(Package&& package) override{(*q_).push(std::move(package));};
     ElementID get_id() const override { return id_; }
+    ReceiverType get_receiver_type() const override{return ReceiverType::WORKER;};
+
 
     const_iterator begin() const override{return q_->begin();}
     const_iterator end() const override{return q_->end();}
