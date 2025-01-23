@@ -23,7 +23,9 @@ bool has_reachable_storehouse(const PackageSender* sender, std::map<const Packag
         {
             auto receiver_ptr = receiver.first;
             auto worker_ptr = dynamic_cast<class Worker*>(receiver_ptr);
+            if (worker_ptr == nullptr) continue;
             auto sendrecv_ptr = dynamic_cast<PackageSender*>(worker_ptr);
+            if (sendrecv_ptr == nullptr) continue;
 
             if (sendrecv_ptr == sender) continue;
             //sender_has_different_receiver_than_themself = true;
@@ -47,6 +49,7 @@ bool Factory::is_consistent() const
         for (const auto& item : container)
         {
             const PackageSender* sender = dynamic_cast<const PackageSender*>(&item);
+            if (sender == nullptr) continue;
             node_colors[sender] = NodeColor::UNVISITED;
         }
     };
@@ -57,6 +60,7 @@ bool Factory::is_consistent() const
         for (auto& ramp : node_r)
         {
             const PackageSender* sender = dynamic_cast<const PackageSender*>(&ramp);
+            if (sender == nullptr) continue;
             has_reachable_storehouse(sender, node_colors);
         }
     }catch (const std::logic_error&)

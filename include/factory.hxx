@@ -18,15 +18,23 @@ public:
     void add(Node&& node) { c_.emplace_back(std::move(node)); }
     void remove_by_id(ElementID id) { c_.remove_if([id](const Node& elem) { return elem.get_id() == id; }); };
     NodeCollection<Node>::iterator find_by_id(ElementID id) {
-        return std::find_if(c_.begin(), c_.end(), [id](const Node& elem) {
+        auto it = std::find_if(c_.begin(), c_.end(), [id](const Node& elem) {
             return elem.get_id() == id;
         });
+        if(it == c_.end()){
+            return std::next(it);
+        }
+        return it;
     }
 
     NodeCollection<Node>::const_iterator find_by_id(ElementID id) const {
-        return std::find_if(c_.begin(), c_.end(), [id](const Node& elem) {
+        auto it = std::find_if(c_.begin(), c_.end(), [id](const Node& elem) {
             return elem.get_id() == id;
         });
+        if(it == c_.end()){
+            return std::next(it);
+        }
+        return it;
     }
 
     iterator begin() { return c_.begin(); }
